@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Investment Academy</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0f1117; --surface: #1a1d27; --surface2: #252836; --surface3: #2e3347;
+      --border: #2e3244; --text: #e2e8f0; --muted: #8892a4;
+      --accent: #6366f1; --accent2: #818cf8; --green: #22c55e;
+      --red: #ef4444; --orange: #f97316; --yellow: #eab308;
+      --cyan: #06b6d4; --purple: #a855f7;
+    }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+    /* NAV */
+    .nav { position: sticky; top: 0; z-index: 100; background: rgba(15,17,23,.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 0 24px; height: 60px; display: flex; align-items: center; justify-content: space-between; }
+    .nav-logo { font-size: 18px; font-weight: 800; color: var(--text); display: flex; align-items: center; gap: 8px; cursor: pointer; }
+    .nav-logo span { color: var(--accent); }
+    .nav-links { display: flex; align-items: center; gap: 8px; }
+    .nav-btn { padding: 7px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; transition: all .18s; }
+    .nav-btn.ghost { background: transparent; color: var(--muted); }
+    .nav-btn.ghost:hover { color: var(--text); background: var(--surface2); }
+    .nav-btn.primary { background: var(--accent); color: #fff; }
+    .nav-btn.primary:hover { opacity: .88; }
+    .nav-user { display: flex; align-items: center; gap: 10px; }
+    .avatar { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--purple)); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: #fff; cursor: pointer; flex-shrink: 0; }
+
+    /* HERO */
+    .hero { padding: 96px 24px 80px; text-align: center; max-width: 720px; margin: 0 auto; }
+    .hero-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(99,102,241,.15); border: 1px solid rgba(99,102,241,.3); border-radius: 99px; padding: 5px 14px; font-size: 12px; color: var(--accent2); font-weight: 600; margin-bottom: 24px; }
+    .hero h1 { font-size: clamp(36px, 6vw, 60px); font-weight: 900; line-height: 1.1; margin-bottom: 20px; }
+    .hero h1 em { font-style: normal; background: linear-gradient(135deg, var(--accent), var(--purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .hero p { font-size: 18px; color: var(--muted); line-height: 1.7; margin-bottom: 36px; }
+    .hero-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .btn-lg { padding: 13px 28px; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; border: none; transition: all .18s; }
+    .btn-lg.primary { background: linear-gradient(135deg, var(--accent), var(--purple)); color: #fff; }
+    .btn-lg.primary:hover { opacity: .88; transform: translateY(-1px); }
+    .btn-lg.secondary { background: var(--surface); border: 1px solid var(--border); color: var(--text); }
+    .btn-lg.secondary:hover { background: var(--surface2); }
+
+    /* FEATURES */
+    .features { padding: 60px 24px; max-width: 1000px; margin: 0 auto; }
+    .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
+    .feature-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 24px; }
+    .feature-icon { font-size: 32px; margin-bottom: 14px; }
+    .feature-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+    .feature-card p { font-size: 14px; color: var(--muted); line-height: 1.6; }
+
+    /* AUTH */
+    .auth-wrap { min-height: calc(100vh - 60px); display: flex; align-items: center; justify-content: center; padding: 40px 16px; }
+    .auth-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 36px; width: 100%; max-width: 420px; }
+    .auth-card h2 { font-size: 22px; font-weight: 800; margin-bottom: 6px; }
+    .auth-card .sub { font-size: 14px; color: var(--muted); margin-bottom: 28px; }
+    .field { margin-bottom: 18px; }
+    .field label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 7px; }
+    .field input, .field select { width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 14px; padding: 10px 14px; font-family: inherit; }
+    .field input:focus, .field select:focus { outline: 2px solid var(--accent); border-color: transparent; }
+    .field input::placeholder { color: var(--muted); }
+    .submit-btn { width: 100%; padding: 12px; border: none; border-radius: 10px; background: linear-gradient(135deg, var(--accent), var(--purple)); color: #fff; font-size: 15px; font-weight: 700; cursor: pointer; margin-top: 6px; transition: opacity .18s; }
+    .submit-btn:hover { opacity: .88; }
+    .submit-btn:disabled { opacity: .5; cursor: not-allowed; }
+    .auth-switch { text-align: center; margin-top: 20px; font-size: 13px; color: var(--muted); }
+    .auth-switch a { color: var(--accent2); cursor: pointer; text-decoration: underline; }
+    .err-msg { background: rgba(239,68,68,.12); border: 1px solid rgba(239,68,68,.3); color: #fca5a5; border-radius: 8px; padding: 10px 14px; font-size: 13px; margin-bottom: 16px; }
+    .ok-msg  { background: rgba(34,197,94,.12); border: 1px solid rgba(34,197,94,.3); color: #86efac; border-radius: 8px; padding: 10px 14px; font-size: 13px; margin-bottom: 16px; }
+
+    /* DASHBOARD */
+    .dash-layout { display: flex; min-height: calc(100vh - 60px); }
+    .sidebar { width: 220px; flex-shrink: 0; border-right: 1px solid var(--border); padding: 20px 12px; display: flex; flex-direction: column; gap: 4px; }
+    .sb-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; color: var(--muted); transition: all .15s; border: none; background: none; width: 100%; text-align: left; }
+    .sb-item:hover { background: var(--surface2); color: var(--text); }
+    .sb-item.active { background: rgba(99,102,241,.15); color: var(--accent2); font-weight: 700; }
+    .sb-icon { font-size: 16px; }
+    .dash-main { flex: 1; padding: 28px 32px; overflow-y: auto; max-width: 860px; }
+    @media (max-width: 680px) { .sidebar { display: none; } .dash-main { padding: 20px 16px; } }
+
+    /* CARD */
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 14px; }
+    .page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+    .page-title { font-size: 22px; font-weight: 800; }
+    .section-title { font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .7px; margin-bottom: 12px; }
+
+    /* LESSONS */
+    .lesson-header { display: flex; align-items: center; gap: 14px; cursor: pointer; user-select: none; }
+    .lesson-num { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; flex-shrink: 0; }
+    .lesson-num.done { background: var(--green); color: #fff; }
+    .lesson-num.pending { background: var(--surface2); color: var(--muted); border: 2px solid var(--border); }
+    .lesson-title { flex: 1; font-weight: 600; font-size: 15px; }
+    .lesson-chevron { color: var(--muted); font-size: 18px; transition: transform .2s; }
+    .lesson-chevron.open { transform: rotate(180deg); }
+    .lesson-body { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .lesson-body p { color: var(--muted); line-height: 1.7; font-size: 14px; margin-bottom: 12px; }
+    .lesson-body ul { color: var(--muted); font-size: 14px; line-height: 1.7; padding-left: 20px; margin-bottom: 12px; }
+    .lesson-body li { margin-bottom: 4px; }
+    .complete-btn { display: inline-flex; align-items: center; gap: 8px; padding: 7px 16px; border-radius: 8px; border: none; font-size: 13px; font-weight: 600; cursor: pointer; transition: all .18s; margin-top: 4px; }
+    .complete-btn.done { background: var(--green); color: #fff; }
+    .complete-btn.pending { background: var(--accent); color: #fff; }
+
+    /* PROGRESS RING */
+    .progress-ring-wrap { display: flex; flex-direction: column; align-items: center; margin-bottom: 24px; }
+    .ring-label { font-size: 26px; font-weight: 700; fill: var(--text); }
+    .ring-sub { font-size: 11px; fill: var(--muted); }
+
+    /* SIMULATOR */
+    .sim-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    @media (max-width: 620px) { .sim-grid { grid-template-columns: 1fr; } }
+    .asset-slider { margin-bottom: 16px; }
+    .slider-label { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 5px; }
+    input[type=range] { width: 100%; height: 6px; cursor: pointer; background: transparent; }
+    input[type=range]::-webkit-slider-runnable-track { height: 6px; border-radius: 99px; background: var(--surface3); }
+    input[type=range]::-moz-range-track { height: 6px; border-radius: 99px; background: var(--surface3); }
+    input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%; margin-top: -5px; cursor: pointer; }
+    input[type=range]::-moz-range-thumb { width: 16px; height: 16px; border-radius: 50%; border: none; cursor: pointer; }
+    .pie-wrap { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+    .pie-legend { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+    .legend-item { display: flex; align-items: center; gap: 5px; font-size: 12px; color: var(--muted); }
+    .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .total-bar { display: flex; justify-content: space-between; align-items: center; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 9px 14px; margin-bottom: 14px; font-size: 13px; }
+    .remaining.ok { color: var(--green); font-weight: 700; }
+    .remaining.over { color: var(--red); font-weight: 700; }
+    textarea { width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 14px; padding: 12px; resize: vertical; min-height: 80px; font-family: inherit; line-height: 1.6; }
+    textarea:focus { outline: 2px solid var(--accent); border-color: transparent; }
+    textarea::placeholder { color: var(--muted); }
+    .analyze-btn { width: 100%; padding: 11px; border: none; border-radius: 10px; background: linear-gradient(135deg, var(--accent), var(--purple)); color: #fff; font-size: 14px; font-weight: 700; cursor: pointer; margin-top: 12px; transition: opacity .18s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .analyze-btn:disabled { opacity: .5; cursor: not-allowed; }
+    .feedback-box { background: var(--surface2); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 8px; padding: 16px; margin-top: 14px; font-size: 14px; line-height: 1.75; white-space: pre-wrap; }
+    .feedback-box.error { border-left-color: var(--red); color: #fca5a5; }
+    .api-key-row { display: flex; gap: 8px; margin-bottom: 8px; }
+    .api-key-row input { flex: 1; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 13px; padding: 9px 12px; font-family: monospace; }
+    .api-key-row input:focus { outline: 2px solid var(--accent); border-color: transparent; }
+
+    /* PROGRESS */
+    .level-badge { background: linear-gradient(135deg, var(--accent), var(--purple)); border-radius: 14px; padding: 22px; text-align: center; margin-bottom: 18px; }
+    .lvl-num { font-size: 52px; font-weight: 900; line-height: 1; }
+    .lvl-title { font-size: 17px; font-weight: 600; margin-top: 5px; }
+    .lvl-sub { font-size: 12px; opacity: .75; margin-top: 3px; }
+    .xp-bar-label { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); margin-bottom: 6px; }
+    .xp-bar-bg { background: var(--surface2); border-radius: 99px; height: 9px; overflow: hidden; }
+    .xp-bar-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--accent), var(--purple)); transition: width .4s; }
+    .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 18px; }
+    .stat-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 14px; text-align: center; }
+    .stat-val { font-size: 24px; font-weight: 800; color: var(--accent2); }
+    .stat-lbl { font-size: 11px; color: var(--muted); margin-top: 3px; text-transform: uppercase; letter-spacing: .5px; }
+    .badges-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; }
+    .badge-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 12px 8px; text-align: center; }
+    .badge-card.earned { border-color: var(--accent); }
+    .badge-card.locked { opacity: .4; }
+    .badge-icon { font-size: 28px; margin-bottom: 5px; }
+    .badge-name { font-size: 11px; font-weight: 600; }
+    .badge-desc { font-size: 10px; color: var(--muted); margin-top: 2px; }
+
+    /* PROFILE */
+    .profile-avatar { width: 72px; height: 72px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--purple)); display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 800; color: #fff; margin-bottom: 14px; }
+    .danger-zone { border: 1px solid rgba(239,68,68,.3); border-radius: 12px; padding: 20px; margin-top: 20px; }
+    .danger-zone h3 { color: var(--red); font-size: 14px; font-weight: 700; margin-bottom: 12px; }
+    .danger-btn { padding: 8px 18px; border-radius: 8px; border: 1px solid var(--red); background: transparent; color: var(--red); font-size: 13px; font-weight: 600; cursor: pointer; transition: all .18s; }
+    .danger-btn:hover { background: rgba(239,68,68,.1); }
+
+    /* LEADERBOARD */
+    .lb-table { width: 100%; border-collapse: collapse; }
+    .lb-table th { padding: 12px 16px; text-align: left; font-size: 11px; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: .5px; background: var(--surface2); border-bottom: 1px solid var(--border); }
+    .lb-table td { padding: 14px 16px; border-bottom: 1px solid var(--border); font-size: 14px; }
+    .lb-table tr:last-child td { border-bottom: none; }
+    .lb-table tr.me td { background: rgba(99,102,241,.08); }
+
+    /* SETUP PAGE */
+    .setup-wrap { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 40px 16px; }
+    .setup-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 36px; width: 100%; max-width: 560px; }
+    .setup-card h2 { font-size: 22px; font-weight: 800; margin-bottom: 8px; }
+    .setup-card .sub { color: var(--muted); font-size: 14px; margin-bottom: 28px; line-height: 1.6; }
+    .step { display: flex; gap: 14px; margin-bottom: 20px; align-items: flex-start; }
+    .step-num { width: 28px; height: 28px; border-radius: 50%; background: var(--accent); color: #fff; font-size: 13px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+    .step-body { flex: 1; font-size: 13px; color: var(--muted); line-height: 1.6; }
+    .step-body strong { color: var(--text); }
+    .sql-box { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; font-family: monospace; font-size: 11px; color: var(--cyan); line-height: 1.6; margin-top: 8px; white-space: pre; overflow-x: auto; }
+
+    /* SPINNERS / LOADING */
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,.3); border-top-color: #fff; border-radius: 50%; animation: spin .7s linear infinite; }
+    .spinner-lg { width: 36px; height: 36px; border-width: 3px; border-color: var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin .8s linear infinite; }
+    .loading-screen { min-height: 100vh; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 16px; color: var(--muted); font-size: 14px; }
+  </style>
+</head>
+<body>
+<div id="root"></div>
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { h, render, Fragment } from 'https://esm.sh/preact@10';
+import { useState, useRef, useEffect } from 'https://esm.sh/preact@10/hooks';
+import htm from 'https://esm.sh/htm@3';
+const html = htm.bind(h);
+
+// ══════════════════════════════════════════════════════
+//  SUPABASE CLIENT
+// ══════════════════════════════════════════════════════
+let supabase = null;
+
+function getConfig() { return JSON.parse(localStorage.getItem('ia_sb_cfg') || 'null'); }
+function saveConfig(url, key) { localStorage.setItem('ia_sb_cfg', JSON.stringify({ url, key })); }
+function initClient(url, key) { supabase = createClient(url, key); }
+
+const cfg = getConfig();
+if (cfg) initClient(cfg.url, cfg.key);
+
+// ══════════════════════════════════════════════════════
+//  DB HELPERS (async, Supabase)
+// ══════════════════════════════════════════════════════
+const DB = {
+  async register(name, email, pass) {
+    const { data, error } = await supabase.auth.signUp({ email, password: pass, options: { data: { name } } });
+    if (error) return [null, error.message];
+    const uid = data.user.id;
+    await supabase.from('profiles').upsert({ id: uid, name });
+    await supabase.from('user_data').upsert({ id: uid, xp: 0, completed_lessons: [], sims: 0, all_assets_used: false });
+    return [data.user, null];
+  },
+  async login(email, pass) {
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password: pass });
+    if (error) return [null, error.message];
+    // Ensure profile row exists
+    await supabase.from('profiles').upsert({ id: data.user.id, name: data.user.user_metadata?.name || email.split('@')[0] });
+    await supabase.from('user_data').upsert({ id: data.user.id, xp: 0, completed_lessons: [], sims: 0, all_assets_used: false }, { ignoreDuplicates: true });
+    return [data.user, null];
+  },
+  async logout() { await supabase.auth.signOut(); },
+  async getSession() { const { data } = await supabase.auth.getSession(); return data.session; },
+  async getProfile(uid) {
+    const { data } = await supabase.from('profiles').select('*').eq('id', uid).single();
+    return data;
+  },
+  async updateName(uid, name) {
+    await supabase.from('profiles').update({ name }).eq('id', uid);
+    await supabase.auth.updateUser({ data: { name } });
+  },
+  async getUserData(uid) {
+    const { data } = await supabase.from('user_data').select('*').eq('id', uid).single();
+    return data || { xp: 0, completed_lessons: [], sims: 0, all_assets_used: false };
+  },
+  async saveUserData(uid, d) {
+    await supabase.from('user_data').upsert({ id: uid, xp: d.xp || 0, completed_lessons: d.completed_lessons || [], sims: d.sims || 0, all_assets_used: d.all_assets_used || false, updated_at: new Date().toISOString() });
+  },
+  async changePassword(email, curPass, newPass) {
+    const { error: authErr } = await supabase.auth.signInWithPassword({ email, password: curPass });
+    if (authErr) return 'Current password is incorrect.';
+    const { error } = await supabase.auth.updateUser({ password: newPass });
+    return error ? error.message : null;
+  },
+  async getLeaderboard() {
+    const [{ data: profiles }, { data: stats }] = await Promise.all([
+      supabase.from('profiles').select('id, name'),
+      supabase.from('user_data').select('id, xp, completed_lessons, sims').order('xp', { ascending: false }),
+    ]);
+    return (stats || []).map(s => ({ ...s, name: (profiles || []).find(p => p.id === s.id)?.name || 'Unknown' }));
+  },
+  async resetProgress(uid) {
+    await supabase.from('user_data').upsert({ id: uid, xp: 0, completed_lessons: [], sims: 0, all_assets_used: false, updated_at: new Date().toISOString() });
+  },
+};
+
+// ══════════════════════════════════════════════════════
+//  CONSTANTS
+// ══════════════════════════════════════════════════════
+const LESSONS = [
+  { id:'1', title:'What Is Investing?', xp:100, body: html`<div><p>Investing is the act of allocating money with the expectation of generating income or profit over time. Unlike saving, investing puts your money to work in assets that can grow in value.</p><p>Key concepts:</p><ul><li><strong>Return:</strong> The gain or loss from an investment, expressed as a percentage.</li><li><strong>Risk:</strong> The chance an investment's actual return differs from expected.</li><li><strong>Liquidity:</strong> How quickly you can convert an investment to cash.</li><li><strong>Time horizon:</strong> How long you plan to hold before selling.</li></ul><p>The earlier you start, the more compound interest grows your wealth — even small amounts become significant over decades.</p></div>` },
+  { id:'2', title:'Asset Classes Explained', xp:150, body: html`<div><p>An asset class is a group of investments with similar characteristics. Diversifying across classes reduces risk.</p><ul><li><strong>Stocks:</strong> Ownership in companies. High potential return, high volatility.</li><li><strong>Bonds:</strong> Loans to governments or companies. Lower risk, steady income.</li><li><strong>Real Estate:</strong> Physical property or REITs. Inflation hedge, illiquid.</li><li><strong>Commodities:</strong> Physical goods like gold. Inflation protection, price-volatile.</li><li><strong>Cash:</strong> Money market, savings. Lowest risk and return.</li></ul><p>A balanced portfolio combines several asset classes weighted to your risk tolerance.</p></div>` },
+  { id:'3', title:'Risk vs. Return', xp:150, body: html`<div><p>To earn higher returns, you must accept higher risk — the core tradeoff of investing.</p><ul><li><strong>Market risk:</strong> The entire market declines. Unavoidable with equities.</li><li><strong>Concentration risk:</strong> Too much in one stock or sector.</li><li><strong>Inflation risk:</strong> Returns don't keep pace with inflation.</li><li><strong>Liquidity risk:</strong> You can't sell when you need to.</li></ul><p>Diversification reduces concentration risk. Holding a mix of assets smooths volatility without sacrificing long-term returns significantly.</p></div>` },
+  { id:'4', title:'Portfolio Allocation Strategies', xp:200, body: html`<div><p>Portfolio allocation divides investments among asset classes to match your goals and risk tolerance.</p><ul><li><strong>60/40:</strong> 60% stocks, 40% bonds. The classic balanced portfolio.</li><li><strong>Age-based:</strong> Subtract your age from 110 to get your stock %.</li><li><strong>All-weather:</strong> 30% stocks, 40% long bonds, 15% intermediate bonds, 7.5% gold, 7.5% commodities.</li><li><strong>Growth:</strong> 80–100% equities for young investors with long time horizons.</li></ul><p>Rebalancing — periodically adjusting back to target allocations — is critical as markets drift your portfolio over time.</p></div>` },
+];
+
+const ASSETS  = ['Stocks','Bonds','Real Estate','Commodities','Cash'];
+const COLORS  = ['#6366f1','#22c55e','#f97316','#eab308','#06b6d4'];
+const MEDALS  = ['🥇','🥈','🥉'];
+
+const BADGES = [
+  { id:'b1', icon:'📖', name:'First Steps',  desc:'Complete 1 lesson',       ok:s=>s.lessons>=1 },
+  { id:'b2', icon:'🎓', name:'Scholar',      desc:'Complete 2 lessons',      ok:s=>s.lessons>=2 },
+  { id:'b3', icon:'🏆', name:'Graduate',     desc:'Complete all lessons',    ok:s=>s.lessons>=4 },
+  { id:'b4', icon:'📊', name:'Analyst',      desc:'Run the simulator',       ok:s=>s.sims>=1 },
+  { id:'b5', icon:'🔬', name:'Quant',        desc:'Run 5 simulations',       ok:s=>s.sims>=5 },
+  { id:'b6', icon:'⭐', name:'Rising Star',  desc:'Reach level 3',           ok:s=>s.level>=3 },
+  { id:'b7', icon:'💎', name:'Diamond',      desc:'Reach level 5',           ok:s=>s.level>=5 },
+  { id:'b8', icon:'🌐', name:'Diversifier',  desc:'Allocate to all 5 assets',ok:s=>s.allAssets },
+];
+
+const XP_THRESHOLDS = [0,200,500,900,1400,2000];
+const LEVEL_TITLES  = ['Beginner','Learner','Investor','Strategist','Expert','Master'];
+function levelInfo(xp) {
+  let lvl=0;
+  for (let i=XP_THRESHOLDS.length-1;i>=0;i--) { if (xp>=XP_THRESHOLDS[i]) { lvl=i; break; } }
+  const prev=XP_THRESHOLDS[lvl], next=XP_THRESHOLDS[Math.min(lvl+1,XP_THRESHOLDS.length-1)];
+  return { level:lvl+1, title:LEVEL_TITLES[lvl], prev, next, pct:Math.min(1,(xp-prev)/(next-prev||1)) };
+}
+
+const PROVIDER_GROUPS = [
+  { id:'groq',      label:'⚡ Groq (Free)',        placeholder:'gsk_...',   hint:'console.groq.com → API Keys — FREE',
+    models:[{id:'llama-3.3-70b-versatile',name:'Llama 3.3 70B (Best, Free)'},{id:'llama-3.1-8b-instant',name:'Llama 3.1 8B (Fastest)'},{id:'mixtral-8x7b-32768',name:'Mixtral 8x7B'},{id:'gemma2-9b-it',name:'Gemma 2 9B'}] },
+  { id:'gemini',    label:'Google Gemini',          placeholder:'AIza...',   hint:'aistudio.google.com → Get API Key (Free tier)',
+    models:[{id:'gemini-2.0-flash',name:'Gemini 2.0 Flash (Free)'},{id:'gemini-1.5-flash',name:'Gemini 1.5 Flash (Free)'},{id:'gemini-1.5-flash-8b',name:'Gemini 1.5 Flash 8B'},{id:'gemini-2.5-pro-preview-06-05',name:'Gemini 2.5 Pro (Paid)'}] },
+  { id:'anthropic', label:'Claude (Anthropic)',      placeholder:'sk-ant-...', hint:'console.anthropic.com → API Keys',
+    models:[{id:'claude-haiku-4-5',name:'Claude Haiku 4.5 (Cheapest)'},{id:'claude-sonnet-4-6',name:'Claude Sonnet 4.6'},{id:'claude-opus-4-8',name:'Claude Opus 4.8 (Best)'}] },
+  { id:'openai',    label:'OpenAI (ChatGPT)',        placeholder:'sk-...',    hint:'platform.openai.com → API Keys',
+    models:[{id:'gpt-4o-mini',name:'GPT-4o Mini'},{id:'gpt-4o',name:'GPT-4o (Best)'},{id:'gpt-3.5-turbo',name:'GPT-3.5 Turbo'}] },
+];
+
+async function callAI(provId, modelId, key, prompt) {
+  if (provId==='groq') {
+    const r=await fetch('https://api.groq.com/openai/v1/chat/completions',{method:'POST',headers:{'Authorization':'Bearer '+key,'content-type':'application/json'},body:JSON.stringify({model:modelId,max_tokens:1000,messages:[{role:'user',content:prompt}]})});
+    if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error(e.error?.message||`HTTP ${r.status}`);}
+    return (await r.json()).choices?.[0]?.message?.content||'';
+  }
+  if (provId==='anthropic') {
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'x-api-key':key,'anthropic-version':'2023-06-01','content-type':'application/json','anthropic-dangerous-direct-browser-calls':'true'},body:JSON.stringify({model:modelId,max_tokens:2000,messages:[{role:'user',content:prompt}]})});
+    if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error(e.error?.message||`HTTP ${r.status}`);}
+    return (await r.json()).content.find(b=>b.type==='text')?.text||'';
+  }
+  if (provId==='openai') {
+    const r=await fetch('https://api.openai.com/v1/chat/completions',{method:'POST',headers:{'Authorization':'Bearer '+key,'content-type':'application/json'},body:JSON.stringify({model:modelId,max_tokens:1000,messages:[{role:'user',content:prompt}]})});
+    if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error(e.error?.message||`HTTP ${r.status}`);}
+    return (await r.json()).choices?.[0]?.message?.content||'';
+  }
+  if (provId==='gemini') {
+    const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modelId}:generateContent?key=${key}`,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:prompt}]}]})});
+    if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error(e.error?.message||`HTTP ${r.status}`);}
+    return (await r.json()).candidates?.[0]?.content?.parts?.[0]?.text||'';
+  }
+}
+
+// ══════════════════════════════════════════════════════
+//  SHARED COMPONENTS
+// ══════════════════════════════════════════════════════
+function PieChart({ allocs }) {
+  const ref = useRef(null);
+  useEffect(() => {
+    const c=ref.current; if(!c) return;
+    const ctx=c.getContext('2d'),w=c.width,h=c.height;
+    ctx.clearRect(0,0,w,h);
+    const total=allocs.reduce((a,b)=>a+b,0);
+    if(!total){ctx.fillStyle='#252836';ctx.beginPath();ctx.arc(w/2,h/2,w/2-4,0,2*Math.PI);ctx.fill();ctx.fillStyle='#8892a4';ctx.font='12px sans-serif';ctx.textAlign='center';ctx.fillText('Allocate funds',w/2,h/2+5);return;}
+    let s=-Math.PI/2;
+    allocs.forEach((v,i)=>{if(!v)return;const a=(v/total)*2*Math.PI;ctx.beginPath();ctx.moveTo(w/2,h/2);ctx.arc(w/2,h/2,w/2-4,s,s+a);ctx.closePath();ctx.fillStyle=COLORS[i];ctx.fill();ctx.strokeStyle='#0f1117';ctx.lineWidth=2;ctx.stroke();s+=a;});
+    ctx.beginPath();ctx.arc(w/2,h/2,w/4,0,2*Math.PI);ctx.fillStyle='#1a1d27';ctx.fill();
+    ctx.fillStyle='#e2e8f0';ctx.font='bold 13px sans-serif';ctx.textAlign='center';ctx.fillText('$'+total.toLocaleString(),w/2,h/2+5);
+  },[allocs]);
+  return html`<canvas ref=${ref} width="150" height="150"/>`;
+}
+
+function ProgressRing({ done, total }) {
+  const r=50,cx=60,cy=60,circ=2*Math.PI*r,dash=(done/Math.max(total,1))*circ;
+  return html`<div class="progress-ring-wrap">
+    <svg width="120" height="120" viewBox="0 0 120 120" style="overflow:visible">
+      <circle cx=${cx} cy=${cy} r=${r} fill="none" stroke="#252836" stroke-width="9"/>
+      <circle cx=${cx} cy=${cy} r=${r} fill="none" stroke="#6366f1" stroke-width="9"
+        stroke-dasharray="${dash} ${circ}" stroke-linecap="round"
+        transform="rotate(-90 ${cx} ${cy})" style="transition:stroke-dasharray .4s"/>
+      <text x=${cx} y=${cy-5} text-anchor="middle" class="ring-label">${done}/${total}</text>
+      <text x=${cx} y=${cy+11} text-anchor="middle" class="ring-sub">lessons done</text>
+    </svg>
+  </div>`;
+}
+
+// ══════════════════════════════════════════════════════
+//  SETUP PAGE
+// ══════════════════════════════════════════════════════
+const SQL_SCHEMA = `create table public.profiles (
+  id uuid references auth.users on delete cascade,
+  name text not null,
+  created_at timestamptz default now(),
+  primary key (id)
+);
+create table public.user_data (
+  id uuid references auth.users on delete cascade,
+  xp int default 0,
+  completed_lessons jsonb default '[]',
+  sims int default 0,
+  all_assets_used boolean default false,
+  updated_at timestamptz default now(),
+  primary key (id)
+);
+alter table public.profiles enable row level security;
+alter table public.user_data enable row level security;
+create policy "profiles_read"  on public.profiles for select using (true);
+create policy "profiles_write" on public.profiles for all  using (auth.uid() = id);
+create policy "data_read"      on public.user_data for select using (true);
+create policy "data_write"     on public.user_data for all  using (auth.uid() = id);`;
+
+function SetupPage({ onSetup }) {
+  const [url, setUrl] = useState('');
+  const [key, setKey] = useState('');
+  const [err, setErr] = useState('');
+  const [testing, setTesting] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  async function connect() {
+    if (!url.trim() || !key.trim()) { setErr('Please enter both the Project URL and anon key.'); return; }
+    setTesting(true); setErr('');
+    try {
+      const client = createClient(url.trim(), key.trim());
+      const { error } = await client.from('profiles').select('id').limit(1);
+      if (error && error.code !== 'PGRST116') throw new Error(error.message);
+      saveConfig(url.trim(), key.trim());
+      initClient(url.trim(), key.trim());
+      onSetup();
+    } catch(e) { setErr('Connection failed: ' + e.message); }
+    finally { setTesting(false); }
+  }
+
+  function copy() {
+    navigator.clipboard?.writeText(SQL_SCHEMA);
+    setCopied(true); setTimeout(()=>setCopied(false), 2000);
+  }
+
+  return html`<div class="setup-wrap">
+    <div class="setup-card">
+      <h2>🗄️ Connect Your Database</h2>
+      <p class="sub">Investment Academy uses Supabase as its database — free, real-time, and hosted. Follow these steps to connect yours.</p>
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body"><strong>Create a free Supabase account</strong> at <strong style="color:var(--accent2)">supabase.com</strong> → New Project (takes ~2 min to spin up).</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <strong>Disable email confirmation:</strong> Project Settings → Authentication → Email → turn off <em>Enable email confirmations</em>.
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <strong>Run this SQL</strong> in SQL Editor → New Query → paste → Run:
+          <div class="sql-box">${SQL_SCHEMA}</div>
+          <button onClick=${copy} style="margin-top:8px;padding:6px 14px;border-radius:6px;border:1px solid var(--border);background:var(--surface3);color:var(--text);font-size:12px;font-weight:600;cursor:pointer">
+            ${copied ? '✓ Copied!' : '📋 Copy SQL'}
+          </button>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body"><strong>Get your keys:</strong> Project Settings → API → copy <em>Project URL</em> and <em>anon public</em> key below.</div>
+      </div>
+
+      <div style="margin-top:8px">
+        ${err && html`<div class="err-msg">${err}</div>`}
+        <div class="field"><label>Project URL</label><input type="text" placeholder="https://xxxx.supabase.co" value=${url} onInput=${e=>setUrl(e.target.value)}/></div>
+        <div class="field"><label>Anon Public Key</label><input type="password" placeholder="eyJ..." value=${key} onInput=${e=>setKey(e.target.value)}/></div>
+        <button class="submit-btn" onClick=${connect} disabled=${testing}>
+          ${testing ? html`<span class="spinner"></span> Testing connection…` : '🔌 Connect & Launch'}
+        </button>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ══════════════════════════════════════════════════════
+//  AUTH PAGES
+// ══════════════════════════════════════════════════════
+function LandingPage({ onNav }) {
+  return html`<div>
+    <div class="hero">
+      <div class="hero-badge">✦ Free Investment Education</div>
+      <h1>Learn to invest with <em>confidence</em></h1>
+      <p>Master portfolio allocation, understand asset classes, and simulate real investment decisions — all with AI-powered feedback.</p>
+      <div class="hero-btns">
+        <button class="btn-lg primary" onClick=${()=>onNav('register')}>Get Started Free</button>
+        <button class="btn-lg secondary" onClick=${()=>onNav('login')}>Sign In</button>
+      </div>
+    </div>
+    <div class="features">
+      <div class="features-grid">
+        ${[['📚','Interactive Lessons','4 in-depth lessons on investing fundamentals.'],
+           ['📊','Portfolio Simulator','Allocate $10,000 and get AI feedback on your strategy.'],
+           ['🏆','Real Leaderboard','Compete with all registered users — data synced across devices.'],
+           ['🤖','Multi-AI Feedback','Claude, GPT-4o, Gemini, or Groq — your choice.'],
+           ['🔒','Secure Accounts','Powered by Supabase — your data is safe and private.'],
+           ['🌍','Works Everywhere','Log in from any device, your progress follows you.'],
+        ].map(([icon,title,desc])=>html`
+          <div class="feature-card" key=${title}>
+            <div class="feature-icon">${icon}</div>
+            <h3>${title}</h3>
+            <p>${desc}</p>
+          </div>`)}
+      </div>
+    </div>
+  </div>`;
+}
+
+function RegisterPage({ onNav, onLogin }) {
+  const [name,setName]=useState('');
+  const [email,setEmail]=useState('');
+  const [pass,setPass]=useState('');
+  const [err,setErr]=useState('');
+  const [loading,setLoading]=useState(false);
+
+  async function submit(e) {
+    e.preventDefault();
+    if (!name.trim()||!email.trim()||!pass.trim()) { setErr('Please fill in all fields.'); return; }
+    if (pass.length<6) { setErr('Password must be at least 6 characters.'); return; }
+    setLoading(true); setErr('');
+    const [user, error] = await DB.register(name.trim(), email.trim().toLowerCase(), pass);
+    setLoading(false);
+    if (error) { setErr(error); return; }
+    onLogin(user);
+  }
+  return html`<div class="auth-wrap"><div class="auth-card">
+    <h2>Create your account</h2>
+    <p class="sub">Start your investment education journey.</p>
+    ${err&&html`<div class="err-msg">${err}</div>`}
+    <form onSubmit=${submit}>
+      <div class="field"><label>Full Name</label><input type="text" placeholder="Alex Johnson" value=${name} onInput=${e=>setName(e.target.value)}/></div>
+      <div class="field"><label>Email</label><input type="email" placeholder="you@example.com" value=${email} onInput=${e=>setEmail(e.target.value)}/></div>
+      <div class="field"><label>Password</label><input type="password" placeholder="Min. 6 characters" value=${pass} onInput=${e=>setPass(e.target.value)}/></div>
+      <button type="submit" class="submit-btn" disabled=${loading}>${loading?html`<span class="spinner"></span> Creating…`:'Create Account →'}</button>
+    </form>
+    <p class="auth-switch">Already have an account? <a onClick=${()=>onNav('login')}>Sign in</a></p>
+  </div></div>`;
+}
+
+function LoginPage({ onNav, onLogin }) {
+  const [email,setEmail]=useState('');
+  const [pass,setPass]=useState('');
+  const [err,setErr]=useState('');
+  const [loading,setLoading]=useState(false);
+
+  async function submit(e) {
+    e.preventDefault();
+    setLoading(true); setErr('');
+    const [user, error] = await DB.login(email.trim().toLowerCase(), pass);
+    setLoading(false);
+    if (error) { setErr(error); return; }
+    onLogin(user);
+  }
+  return html`<div class="auth-wrap"><div class="auth-card">
+    <h2>Welcome back</h2>
+    <p class="sub">Sign in to continue your learning journey.</p>
+    ${err&&html`<div class="err-msg">${err}</div>`}
+    <form onSubmit=${submit}>
+      <div class="field"><label>Email</label><input type="email" placeholder="you@example.com" value=${email} onInput=${e=>setEmail(e.target.value)}/></div>
+      <div class="field"><label>Password</label><input type="password" placeholder="Your password" value=${pass} onInput=${e=>setPass(e.target.value)}/></div>
+      <button type="submit" class="submit-btn" disabled=${loading}>${loading?html`<span class="spinner"></span> Signing in…`:'Sign In →'}</button>
+    </form>
+    <p class="auth-switch">Don't have an account? <a onClick=${()=>onNav('register')}>Sign up free</a></p>
+  </div></div>`;
+}
+
+// ══════════════════════════════════════════════════════
+//  DASHBOARD PAGES
+// ══════════════════════════════════════════════════════
+function LessonsPage({ userData, onSave }) {
+  const done = new Set(userData.completed_lessons || []);
+  const [open, setOpen] = useState(null);
+  const [saving, setSaving] = useState(false);
+
+  async function completeLesson(id, xp) {
+    if (done.has(id)) return;
+    setSaving(true);
+    const newDone = [...done, id];
+    await onSave({ ...userData, completed_lessons: newDone, xp: (userData.xp||0)+xp });
+    setSaving(false);
+  }
+  return html`<div>
+    <${ProgressRing} done=${done.size} total=${LESSONS.length}/>
+    ${LESSONS.map(L=>html`
+      <div class="card" key=${L.id}>
+        <div class="lesson-header" onClick=${()=>setOpen(open===L.id?null:L.id)}>
+          <div class=${'lesson-num '+(done.has(L.id)?'done':'pending')}>${done.has(L.id)?'✓':L.id}</div>
+          <div class="lesson-title">${L.title}</div>
+          <div class=${'lesson-chevron '+(open===L.id?'open':'')}>▾</div>
+        </div>
+        ${open===L.id&&html`
+          <div class="lesson-body">
+            ${L.body}
+            <button class=${'complete-btn '+(done.has(L.id)?'done':'pending')}
+              onClick=${()=>completeLesson(L.id,L.xp)} disabled=${saving}>
+              ${done.has(L.id)?'✓ Completed':saving?'Saving…':'✔ Mark as Complete'}
+            </button>
+          </div>`}
+      </div>`)}
+  </div>`;
+}
+
+function SimulatorPage({ userData, onSave }) {
+  const TOTAL=10000;
+  const [allocs,setAllocs]=useState([0,0,0,0,0]);
+  const [reason,setReason]=useState('');
+  const [provId,setProvId]=useState(()=>localStorage.getItem('ia_prov')||'groq');
+  const [modelId,setModelId]=useState(()=>localStorage.getItem('ia_model')||'llama-3.3-70b-versatile');
+  const [apiKey,setApiKey]=useState(()=>localStorage.getItem('ia_ak_'+(localStorage.getItem('ia_prov')||'groq'))||'');
+  const [feedback,setFeedback]=useState('');
+  const [loading,setLoading]=useState(false);
+  const [error,setError]=useState('');
+  const provGroup=PROVIDER_GROUPS.find(p=>p.id===provId)||PROVIDER_GROUPS[0];
+  const allocated=allocs.reduce((a,b)=>a+b,0);
+  const remaining=TOTAL-allocated;
+
+  function switchProv(id){const g=PROVIDER_GROUPS.find(p=>p.id===id);setProvId(id);setModelId(g.models[0].id);localStorage.setItem('ia_prov',id);localStorage.setItem('ia_model',g.models[0].id);setApiKey(localStorage.getItem('ia_ak_'+id)||'');setFeedback('');setError('');}
+  function switchModel(id){setModelId(id);localStorage.setItem('ia_model',id);}
+  function setAlloc(i,v){const a=[...allocs];a[i]=v;setAllocs(a);}
+
+  async function analyze() {
+    if (!apiKey.trim()){setError('⚠ Please paste your API key above first.');return;}
+    if (allocated===0){setError('⚠ Move at least one slider above $0.');return;}
+    setLoading(true);setFeedback('');setError('');
+    localStorage.setItem('ia_ak_'+provId,apiKey);
+    const lines=ASSETS.map((n,i)=>`  - ${n}: $${allocs[i].toLocaleString()} (${((allocs[i]/TOTAL)*100).toFixed(1)}%)`).join('\n');
+    const prompt=`You are an expert investment educator. Analyze this $10,000 portfolio and give educational feedback.\n\nPortfolio:\n${lines}\nAllocated: $${allocated.toLocaleString()} of $10,000\nReasoning: ${reason||'(none provided)'}\n\nCover: 1) Strategy assessment 2) What was done well 3) Risks/weaknesses 4) Improvement suggestions 5) Comparison to 60/40 or all-weather. Under 400 words, educational and encouraging.`;
+    try {
+      const text=await callAI(provId,modelId,apiKey.trim(),prompt);
+      if(!text) throw new Error('Empty response. Try again.');
+      setFeedback(text);
+      const allAssetsUsed=allocs.every(v=>v>0);
+      await onSave({...userData,sims:(userData.sims||0)+1,xp:(userData.xp||0)+50,all_assets_used:userData.all_assets_used||allAssetsUsed});
+    } catch(e) {
+      const m=e.message||'';
+      setError(m.toLowerCase().includes('fetch')||m.toLowerCase().includes('network')?'⚠ Network error — this provider may block browser requests. Try Groq or a different model.':'Error: '+m);
+    }
+    finally{setLoading(false);}
+  }
+
+  return html`<div>
+    <div class="card" style="margin-bottom:16px">
+      <div class="section-title" style="margin-bottom:10px">AI Provider</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">
+        ${PROVIDER_GROUPS.map(p=>html`
+          <button key=${p.id} onClick=${()=>switchProv(p.id)}
+            style=${{padding:'7px 14px',borderRadius:'8px',border:'1px solid '+(provId===p.id?'var(--accent)':'var(--border)'),background:provId===p.id?'var(--accent)':'var(--surface2)',color:provId===p.id?'#fff':'var(--muted)',fontSize:'13px',fontWeight:600,cursor:'pointer'}}>
+            ${p.label}</button>`)}
+      </div>
+      <div class="section-title" style="margin-bottom:8px">Model</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">
+        ${provGroup.models.map(m=>html`
+          <button key=${m.id} onClick=${()=>switchModel(m.id)}
+            style=${{padding:'6px 12px',borderRadius:'8px',border:'1px solid '+(modelId===m.id?'var(--accent)':'var(--border)'),background:modelId===m.id?'var(--accent)':'var(--surface2)',color:modelId===m.id?'#fff':'var(--muted)',fontSize:'12px',fontWeight:600,cursor:'pointer'}}>
+            ${m.name}</button>`)}
+      </div>
+      <div class="api-key-row"><input type="password" placeholder=${provGroup.placeholder} value=${apiKey} onInput=${e=>setApiKey(e.target.value)}/></div>
+      <div style="font-size:11px;color:var(--muted)">Get key at: <strong style="color:var(--accent2)">${provGroup.hint}</strong></div>
+    </div>
+    <div class="total-bar">
+      <span>Budget: <strong>$10,000</strong></span>
+      <span>Remaining: <span class=${'remaining '+(remaining>=0?'ok':'over')}>$${remaining.toLocaleString()}</span></span>
+    </div>
+    <div class="sim-grid">
+      <div class="card">
+        <div class="section-title">Allocate Your Portfolio</div>
+        ${ASSETS.map((name,i)=>html`
+          <div class="asset-slider" key=${name}>
+            <div class="slider-label">
+              <span style=${{fontWeight:600,color:COLORS[i]}}>${name}</span>
+              <span style="color:var(--accent2);font-weight:700">$${allocs[i].toLocaleString()}</span>
+            </div>
+            <input type="range" min="0" max="10000" step="100" value=${allocs[i]} style=${{accentColor:COLORS[i]}} onInput=${e=>setAlloc(i,+e.target.value)}/>
+          </div>`)}
+      </div>
+      <div class="card pie-wrap">
+        <div class="section-title">Portfolio Mix</div>
+        <${PieChart} allocs=${allocs}/>
+        <div class="pie-legend">
+          ${ASSETS.map((name,i)=>allocs[i]>0&&html`
+            <div class="legend-item" key=${name}>
+              <div class="legend-dot" style=${{background:COLORS[i]}}></div>
+              <span>${name} ${((allocs[i]/Math.max(allocated,1))*100).toFixed(0)}%</span>
+            </div>`)}
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="section-title">Your Reasoning</div>
+      <textarea placeholder="Explain your strategy… time horizon, risk tolerance, why these allocations?" value=${reason} onInput=${e=>setReason(e.target.value)}></textarea>
+      <button class="analyze-btn" onClick=${analyze} disabled=${loading||allocated===0}>
+        ${loading?html`<span class="spinner"></span> Analyzing…`:'✦ Get AI Feedback'}
+      </button>
+    </div>
+    ${error&&html`<div class="feedback-box error">${error}</div>`}
+    ${feedback&&html`<div class="feedback-box">${feedback}</div>`}
+  </div>`;
+}
+
+function ProgressPage({ userData }) {
+  const xp=userData.xp||0;
+  const {level,title,prev,next,pct}=levelInfo(xp);
+  const lessons=(userData.completed_lessons||[]).length;
+  const sims=userData.sims||0;
+  const stats={lessons,sims,level,allAssets:userData.all_assets_used};
+  return html`<div>
+    <div class="level-badge">
+      <div class="lvl-num">${level}</div>
+      <div class="lvl-title">${title}</div>
+      <div class="lvl-sub">${xp} XP total</div>
+    </div>
+    <div class="card">
+      <div class="xp-bar-label"><span>Level ${level}</span><span>${xp-prev} / ${next-prev} XP to next</span></div>
+      <div class="xp-bar-bg"><div class="xp-bar-fill" style=${{width:pct*100+'%'}}></div></div>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-val">${lessons}</div><div class="stat-lbl">Lessons</div></div>
+      <div class="stat-card"><div class="stat-val">${sims}</div><div class="stat-lbl">Sim Runs</div></div>
+      <div class="stat-card"><div class="stat-val">${xp}</div><div class="stat-lbl">Total XP</div></div>
+    </div>
+    <div class="section-title">Achievements</div>
+    <div class="badges-grid">
+      ${BADGES.map(b=>{const earned=b.ok(stats);return html`
+        <div class=${'badge-card '+(earned?'earned':'locked')} key=${b.id}>
+          <div class="badge-icon">${b.icon}</div>
+          <div class="badge-name">${b.name}</div>
+          <div class="badge-desc">${b.desc}</div>
+        </div>`;})}
+    </div>
+  </div>`;
+}
+
+function LeaderboardPage({ currentUserId }) {
+  const [rows, setRows] = useState(null);
+  useEffect(() => { DB.getLeaderboard().then(setRows); }, []);
+  if (!rows) return html`<div style="display:flex;justify-content:center;padding:60px"><div class="spinner-lg"></div></div>`;
+  return html`<div>
+    <div class="page-header"><div class="page-title">🏆 Leaderboard</div></div>
+    <div class="card" style="padding:0;overflow:hidden">
+      <table class="lb-table">
+        <thead><tr>
+          <th>#</th><th>User</th><th>Level</th><th>XP</th><th>Lessons</th><th>Sims</th>
+        </tr></thead>
+        <tbody>
+          ${rows.length===0&&html`<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:32px">No users yet.</td></tr>`}
+          ${rows.map((r,i)=>{
+            const {level,title}=levelInfo(r.xp||0);
+            const isMe=r.id===currentUserId;
+            const initials=r.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+            return html`<tr class=${isMe?'me':''} key=${r.id}>
+              <td style="font-size:18px;font-weight:800;color:${i<3?'var(--yellow)':'var(--muted)'}">${MEDALS[i]||i+1}</td>
+              <td>
+                <div style="display:flex;align-items:center;gap:10px">
+                  <div style=${{width:'32px',height:'32px',borderRadius:'50%',background:'linear-gradient(135deg,var(--accent),var(--purple))',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'11px',fontWeight:700,color:'#fff',flexShrink:0}}>${initials}</div>
+                  <div>
+                    <div style="font-weight:700;font-size:13px">${r.name}${isMe?html` <span style="font-size:11px;color:var(--accent2)">(you)</span>`:''}</div>
+                    <div style="font-size:11px;color:var(--muted)">${title}</div>
+                  </div>
+                </div>
+              </td>
+              <td><span style="background:rgba(99,102,241,.15);color:var(--accent2);border-radius:6px;padding:3px 10px;font-size:12px;font-weight:700">Lvl ${level}</span></td>
+              <td style="font-weight:700;color:var(--accent2)">${r.xp||0}</td>
+              <td style="color:var(--muted)">${(r.completed_lessons||[]).length}/4</td>
+              <td style="color:var(--muted)">${r.sims||0}</td>
+            </tr>`;
+          })}
+        </tbody>
+      </table>
+    </div>
+    <div style="font-size:11px;color:var(--muted);margin-top:10px;text-align:center">Ranked by XP · Updates live from the database</div>
+  </div>`;
+}
+
+function ProfilePage({ user, profile, userData, onSave, onLogout, onNameChange }) {
+  const [name,setName]=useState(profile?.name||'');
+  const [profileMsg,setProfileMsg]=useState('');
+  const [profileErr,setProfileErr]=useState('');
+  const [curPass,setCurPass]=useState('');
+  const [newPass,setNewPass]=useState('');
+  const [newPass2,setNewPass2]=useState('');
+  const [passMsg,setPassMsg]=useState('');
+  const [passErr,setPassErr]=useState('');
+  const [saving,setSaving]=useState(false);
+
+  async function saveName() {
+    if (!name.trim()){setProfileErr('Name cannot be empty.');return;}
+    setSaving(true);setProfileErr('');
+    await DB.updateName(user.id, name.trim());
+    onNameChange(name.trim());
+    setProfileMsg('✓ Name updated!');setSaving(false);
+    setTimeout(()=>setProfileMsg(''),2500);
+  }
+
+  async function changePassword() {
+    setPassErr('');setPassMsg('');
+    if (newPass.length<6){setPassErr('New password must be at least 6 characters.');return;}
+    if (newPass!==newPass2){setPassErr('New passwords do not match.');return;}
+    setSaving(true);
+    const err=await DB.changePassword(user.email,curPass,newPass);
+    setSaving(false);
+    if (err){setPassErr(err);return;}
+    setCurPass('');setNewPass('');setNewPass2('');
+    setPassMsg('✓ Password changed!');setTimeout(()=>setPassMsg(''),2500);
+  }
+
+  async function resetProgress() {
+    if(!confirm('Delete all your progress? This cannot be undone.')) return;
+    await DB.resetProgress(user.id);
+    await onSave({xp:0,completed_lessons:[],sims:0,all_assets_used:false});
+  }
+
+  const initials=(profile?.name||'?').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+  return html`<div>
+    <div class="page-header"><div class="page-title">Profile</div></div>
+    <div class="card" style="display:flex;align-items:center;gap:20px;margin-bottom:20px">
+      <div class="profile-avatar">${initials}</div>
+      <div>
+        <div style="font-size:18px;font-weight:800">${profile?.name}</div>
+        <div style="font-size:13px;color:var(--muted)">${user.email}</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="section-title">Edit Profile</div>
+      ${profileMsg&&html`<div class="ok-msg">${profileMsg}</div>`}
+      ${profileErr&&html`<div class="err-msg">${profileErr}</div>`}
+      <div class="field"><label>Display Name</label><input type="text" value=${name} onInput=${e=>setName(e.target.value)}/></div>
+      <div class="field"><label>Email</label><input type="email" value=${user.email} disabled style="opacity:.5;cursor:not-allowed"/></div>
+      <button class="submit-btn" style="margin-top:4px" onClick=${saveName} disabled=${saving}>Save Name</button>
+    </div>
+    <div class="card">
+      <div class="section-title">Change Password</div>
+      ${passMsg&&html`<div class="ok-msg">${passMsg}</div>`}
+      ${passErr&&html`<div class="err-msg">${passErr}</div>`}
+      <div class="field"><label>Current Password</label><input type="password" placeholder="Enter current password" value=${curPass} onInput=${e=>setCurPass(e.target.value)}/></div>
+      <div class="field"><label>New Password</label><input type="password" placeholder="Min. 6 characters" value=${newPass} onInput=${e=>setNewPass(e.target.value)}/></div>
+      <div class="field"><label>Confirm New Password</label><input type="password" placeholder="Repeat new password" value=${newPass2} onInput=${e=>setNewPass2(e.target.value)}/></div>
+      <button class="submit-btn" style="margin-top:4px" onClick=${changePassword} disabled=${saving}>Change Password</button>
+    </div>
+    <div class="card">
+      <div class="section-title">Account Stats</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
+        ${[['Total XP',userData.xp||0],['Lessons',(userData.completed_lessons||[]).length+' / 4'],['Sim Runs',userData.sims||0]].map(([l,v])=>html`
+          <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center" key=${l}>
+            <div style="font-size:20px;font-weight:800;color:var(--accent2)">${v}</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:2px">${l}</div>
+          </div>`)}
+      </div>
+    </div>
+    <div class="danger-zone">
+      <h3>⚠ Danger Zone</h3>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="danger-btn" onClick=${resetProgress}>Reset Progress</button>
+        <button class="danger-btn" onClick=${onLogout}>Sign Out</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ══════════════════════════════════════════════════════
+//  DASHBOARD
+// ══════════════════════════════════════════════════════
+function Dashboard({ user, onLogout }) {
+  const [section, setSection] = useState('lessons');
+  const [userData, setUserData] = useState(null);
+  const [profile, setProfile] = useState(null);
+
+  useEffect(() => {
+    Promise.all([DB.getUserData(user.id), DB.getProfile(user.id)])
+      .then(([d, p]) => { setUserData(d); setProfile(p); });
+  }, [user.id]);
+
+  async function saveUserData(data) {
+    setUserData(data);
+    await DB.saveUserData(user.id, data);
+  }
+
+  const NAV = [
+    { id:'lessons',     icon:'📚', label:'Lessons'     },
+    { id:'simulator',   icon:'📊', label:'Simulator'   },
+    { id:'progress',    icon:'🏅', label:'Progress'    },
+    { id:'leaderboard', icon:'🏆', label:'Leaderboard' },
+    { id:'profile',     icon:'👤', label:'Profile'     },
+  ];
+
+  const initials = (profile?.name||user.email).split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+
+  if (!userData || !profile) return html`
+    <nav class="nav"><div class="nav-logo">💹 <span>Investment</span> Academy</div></nav>
+    <div class="loading-screen"><div class="spinner-lg"></div><span>Loading your data…</span></div>`;
+
+  return html`<div>
+    <nav class="nav">
+      <div class="nav-logo" onClick=${()=>setSection('lessons')}>💹 <span>Investment</span> Academy</div>
+      <div class="nav-user">
+        <span style="font-size:13px;color:var(--muted);margin-right:4px">Hi, ${profile.name.split(' ')[0]}</span>
+        <div class="avatar" onClick=${()=>setSection('profile')}>${initials}</div>
+      </div>
+    </nav>
+    <div class="dash-layout">
+      <aside class="sidebar">
+        ${NAV.map(n=>html`
+          <button key=${n.id} class=${'sb-item'+(section===n.id?' active':'')} onClick=${()=>setSection(n.id)}>
+            <span class="sb-icon">${n.icon}</span>${n.label}
+          </button>`)}
+      </aside>
+      <main class="dash-main">
+        ${section==='lessons'     && html`<${LessonsPage}     userData=${userData} onSave=${saveUserData}/>`}
+        ${section==='simulator'   && html`<${SimulatorPage}   userData=${userData} onSave=${saveUserData}/>`}
+        ${section==='progress'    && html`<${ProgressPage}    userData=${userData}/>`}
+        ${section==='leaderboard' && html`<${LeaderboardPage} currentUserId=${user.id}/>`}
+        ${section==='profile'     && html`<${ProfilePage}     user=${user} profile=${profile} userData=${userData} onSave=${saveUserData} onLogout=${onLogout} onNameChange=${n=>{setProfile({...profile,name:n});}}/>`}
+      </main>
+    </div>
+  </div>`;
+}
+
+// ══════════════════════════════════════════════════════
+//  ROOT APP
+// ══════════════════════════════════════════════════════
+function App() {
+  const [ready, setReady] = useState(!!getConfig());
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(!!getConfig());
+  const [page, setPage] = useState('landing');
+
+  useEffect(() => {
+    if (!supabase) return;
+    DB.getSession().then(session => {
+      if (session) setUser(session.user);
+      setLoading(false);
+    });
+    supabase.auth.onAuthStateChange((_e, session) => {
+      setUser(session?.user || null);
+    });
+  }, [ready]);
+
+  if (!ready) return html`<${SetupPage} onSetup=${()=>{setReady(true);setLoading(true);}}/>`;
+  if (loading) return html`<div class="loading-screen"><div class="spinner-lg"></div><span>Connecting…</span></div>`;
+  if (user) return html`<${Dashboard} user=${user} onLogout=${async()=>{await DB.logout();setUser(null);setPage('landing');}}/>`;
+
+  return html`<div>
+    <nav class="nav">
+      <div class="nav-logo" onClick=${()=>setPage('landing')}>💹 <span>Investment</span> Academy</div>
+      <div class="nav-links">
+        ${page!=='login'    && html`<button class="nav-btn ghost"   onClick=${()=>setPage('login')}>Sign In</button>`}
+        ${page!=='register' && html`<button class="nav-btn primary" onClick=${()=>setPage('register')}>Get Started</button>`}
+      </div>
+    </nav>
+    ${page==='register' && html`<${RegisterPage} onNav=${setPage} onLogin=${u=>{setUser(u);}}/>`}
+    ${page==='login'    && html`<${LoginPage}    onNav=${setPage} onLogin=${u=>{setUser(u);}}/>`}
+    ${page==='landing'  && html`<${LandingPage}  onNav=${setPage}/>`}
+  </div>`;
+}
+
+render(html`<${App}/>`, document.getElementById('root'));
+</script>
+</body>
+</html>
